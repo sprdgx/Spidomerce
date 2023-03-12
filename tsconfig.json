@@ -24,6 +24,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Product.tsx", "components/Footer.tsx", "src/pages/checkout.tsx", "components/ProductsContext.tsx",],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Product.tsx", "components/Footer.tsx", "src/pages/checkout.tsx", "components/ProductsContext.tsx", "lib/mongoose.js",],
   "exclude": ["node_modules"]
 }
