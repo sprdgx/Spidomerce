@@ -25,7 +25,7 @@ export default function Home( {   }) {
   let products: any[];
 
   if (typing) {
-     products = productsInfo.filter((p: { name: string; }) => p.name.toLowerCase().includes(typing)) 
+     products = productsInfo.filter((p: { name: string; }) => p.name.includes(typing)) 
   } else {
     products = productsInfo
   }
