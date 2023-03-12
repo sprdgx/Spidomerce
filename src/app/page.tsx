@@ -1,91 +1,92 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+"use client";
 
-const inter = Inter({ subsets: ['latin'] })
+import Product from 'components/Product';
+import { useEffect, useState } from 'react'
+import { initMongooose } from 'lib/mongoose';
+import { findAllProdcuts } from '@/pages/api/products';
+import Footer from 'components/Footer';
+import Success from 'components/Success';
+import Slider from 'components/Slider';
 
-export default function Home() {
+export default function Home( {   }) {
+  const [productsInfo,setProductsInfo]: any[] = useState([]) ;
+  useEffect( () => {
+    fetch('/api/products')   
+    .then(response => response.json ()) 
+    .then(json => setProductsInfo(json));
+  },);
+  
+
+  
+  const categoriesNames : any[] = [...new Set(productsInfo.map((p: { category: any; }) => p.category))];
+
+  const [typing,setTyping] = useState('')
+
+  let products: any[];
+
+  if (typing) {
+     products = productsInfo.filter((p: { name: string; }) => p.name.toLowerCase().includes(typing)) 
+  } else {
+    products = productsInfo
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+      
+      
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
-        </div>
-      </div>
+       <div className="px-5 p-2 bg-red-300">
+          <div className='text-center  pt-5'>
+            <h3 className='text-3xl font-bold text-white font-mono text-center'>-/WELCOM TO OUR STORE 🤗 </h3>
+            <h1 className='text-white pt-5 font-serif text-base'>Follow The Steps To Be Able To Purchase  🛍️</h1>
+            <div className='flex space-x-10 justify-center'>
+            <div className='justify-center '>
+            <h1 className='text-white text-sm pt-1 font-serif '>PAGE I: </h1>
+            <div className='text-center justify-center '>
+              <h1 className='text-white text-sm pt-1 font-serif text-left	'>1-/ Choose Product </h1>
+              <h1 className='text-white text-sm pt-1 font-serif text-left	'>2-/ Add to Cart </h1>
+            </div>
+            </div>
+            <div>
+            <h1 className='text-white text-sm pt-1 font-serif '>PAGE II: </h1>
+            <div className='text-center justify-center '>
+              <h1 className='text-white text-sm font-serif pt-1 text-left	'>1-/ Checkout </h1>
+              <h1 className='text-white text-sm font-serif pt-1 text-left	'>2-/ Stripe Payments </h1>
+            </div>
+            </div>
+            </div>
+          </div>
+          <Success />
+          <Slider/>
+          <div className=''>
+            <h3 className='text-xl font-bold text-white font-mono pt-3 pb-5 px-4'>2-/Look for Products 🤓 </h3>
+          </div>
+          <input value={typing} onChange={e => setTyping(e.target.value)} type="text" placeholder='Search for Products...' className='bg-white w-full rounded-xl py-2 px-5 placeholder:text-red-400 ' />
 
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+          
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
+           <div className="">
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+              {categoriesNames.map(categoryName => (
+                    <div className='text-white'  key={categoryName}>
+                      {products.find(p => p.category === categoryName ) && (
+                        <div>
+                          <h2 className='text-2xl font-bold mt-5 px-5'>{categoryName}</h2>
+                          <div className='flex -mx-5 overflow-x-scroll snap-x scrollbar-hide'>
+                            {products.filter(p => p.category === categoryName).map(productsInfo => (
+                                <div key={productsInfo._id} className='px-5 snap-start'>
+                                  <Product {...productsInfo}/>
+                                  </div>
+                                 
+                            ))}
+                         </div>
+                         <Footer/>
+                         </div>
+                         )} 
+                    </div>      
+              ))}
+       </div>
+       
+</div>
+
+)}
+
